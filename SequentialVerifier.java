@@ -1,6 +1,6 @@
 package verifiers;
 
-import models.ValidationResult;
+import models.*;
 
 public class SequentialVerifier extends VerifierStrategy {
     
@@ -10,10 +10,29 @@ public class SequentialVerifier extends VerifierStrategy {
     
     @Override
     public ValidationResult verify() {
+        // Validate all rows
+        for (int i = 0; i < 9; i++) {
+            ValidationWorker worker = new ValidationWorker(
+                ValidationType.ROW, i, board, result
+            );
+            worker.run();
+        }
         
-        validateRows();
-        validateColumns();
-        validateBoxes();
+        // Validate all columns
+        for (int i = 0; i < 9; i++) {
+            ValidationWorker worker = new ValidationWorker(
+                ValidationType.COLUMN, i, board, result
+            );
+            worker.run();
+        }
+        
+        // Validate all boxes
+        for (int i = 0; i < 9; i++) {
+            ValidationWorker worker = new ValidationWorker(
+                ValidationType.BOX, i, board, result
+            );
+            worker.run();
+        }
         
         return result;
     }
