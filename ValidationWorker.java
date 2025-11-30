@@ -62,35 +62,35 @@ public class ValidationWorker implements Runnable {
             List<int[]> convertedPositions = convertPositions(positions, type);
             
             
-            result.addDuplicate(new Duplicate(type, index, value, convertedPositions)); // index + 1 converts 0-based to 1-based for display
+            result.addDuplicate(new Duplicate(type, index, value, convertedPositions)); 
         }
     }
     
     private List<int[]> convertPositions(List<Integer> positions, ValidationType type) {
         List<int[]> result = new ArrayList<>();
         
-        for (int pos : positions) {  // pos is 1 based (1-9) from DuplicateHelper
+        for (int pos : positions) {  
             int[] coordinate = new int[2];
             
             if (type == ValidationType.ROW) {
-                // ROW: row number is index+1, column is pos
-                coordinate[0] = index + 1;  // row (1 based)
-                coordinate[1] = pos;        // col (already 1 based)
+              
+                coordinate[0] = index + 1;  
+                coordinate[1] = pos;       
                 
             } else if (type == ValidationType.COLUMN) {
-                // COLUMN: row is pos, column number is index+1
-                coordinate[0] = pos;        // row (already 1 based)
-                coordinate[1] = index + 1;  // col (1 based)
+               
+                coordinate[0] = pos;       
+                coordinate[1] = index + 1; 
                 
-            } else {  // BOX
-                // to convert box index (0-8) and position (1-9) to [row, col]
-                int boxStartRow = (index / 3) * 3;  // 0, 3, or 6
-                int boxStartCol = (index % 3) * 3;  // 0, 3, or 6
+            } else {  
                 
-                // pos is 1-9, convert to 0-8 for offset calculation
+                int boxStartRow = (index / 3) * 3;  
+                int boxStartCol = (index % 3) * 3; 
+                
+               
                 int offset = pos - 1;
-                int rowOffset = offset / 3;  // 0, 1, or 2
-                int colOffset = offset % 3;  // 0, 1, or 2
+                int rowOffset = offset / 3; 
+                int colOffset = offset % 3; 
                 
                 coordinate[0] = boxStartRow + rowOffset + 1;  // 1 based row
                 coordinate[1] = boxStartCol + colOffset + 1;  // 1 based col
