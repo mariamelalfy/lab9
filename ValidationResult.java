@@ -11,7 +11,7 @@ public class ValidationResult {
         this.duplicates = new ArrayList<>();
     }
     
-    public void addDuplicate(Duplicate duplicate) {
+    public synchronized void addDuplicate(Duplicate duplicate) {
         duplicates.add(duplicate);
     }
     
@@ -67,4 +67,5 @@ public class ValidationResult {
         
         return result;
     }
+
 }
