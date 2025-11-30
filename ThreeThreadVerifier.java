@@ -1,7 +1,5 @@
 package verifiers;
-
 import models.*;
-
 public class ThreeThreadVerifier extends VerifierStrategy {
     
     public ThreeThreadVerifier(int[][] board) {
@@ -10,26 +8,35 @@ public class ThreeThreadVerifier extends VerifierStrategy {
     
     @Override
     public ValidationResult verify() {
-        // Create 3 workers (threads) One checks all rows, one checks all columns, one checks all boxes
-        RowWorker rowWorker = new RowWorker(board, result);
-        ColumnWorker colWorker = new ColumnWorker(board, result);
-        BoxWorker boxWorker = new BoxWorker(board, result);
+        // Create 3 threads - each validates all 9 of its type
+        Thread rowThread = new Thread(() -> {
+            for (int i = 0; i < 9; i++) {
+                new ValidationWorker(ValidationType.ROW, i, board, result).run();
+            }
+        });
         
-        // Create 3 threads
-        Thread t1 = new Thread(rowWorker);
-        Thread t2 = new Thread(colWorker);
-        Thread t3 = new Thread(boxWorker);
+        Thread colThread = new Thread(() -> {
+            for (int i = 0; i < 9; i++) {
+                new ValidationWorker(ValidationType.COLUMN, i, board, result).run();
+            }
+        });
         
-        // start all 3 threads at the same time
-        t1.start();
-        t2.start();
-        t3.start();
+        Thread boxThread = new Thread(() -> {
+            for (int i = 0; i < 9; i++) {
+                new ValidationWorker(ValidationType.BOX, i, board, result).run();
+            }
+        });
         
-        // wait for all 3 to finish
+        // Start all 3 threads
+        rowThread.start();
+        colThread.start();
+        boxThread.start();
+        
+        // Wait for all to finish
         try {
-            t1.join();
-            t2.join();
-            t3.join();
+            rowThread.join();
+            colThread.join();
+            boxThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
